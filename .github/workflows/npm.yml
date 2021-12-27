@@ -24,6 +24,7 @@ jobs:
     - name: Publish if version has been updated
       uses: JS-DevTools/npm-publish@v1
       with:
+        access: "public"
         check-version: true
         token: ${{ secrets.NPM_AUTH_TOKEN }}
   tag-new-versions:
