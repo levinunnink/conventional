@@ -1,12 +1,19 @@
 {
-  "name": "conventional",
-  "version": "1.0.0",
+  "name": "@smmall/conventional",
+  "version": "1.0.0-alpha.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "bin": {
+    "conventional": "./bin/conventional"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/levinunnink/conventional"
+  },
+  "author": "levi@smmall.site",
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.44.0",
