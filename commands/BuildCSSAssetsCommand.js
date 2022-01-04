@@ -58,9 +58,9 @@ class BuildCSSAssetsCommand {
         from: process.env.FILESYSTEM !== 's3' ? _path : undefined,
       });
       if(!(await this.fs.existsSync(destDir))) {
-        this.fs.mkdirSync(destDir, { recursive: true });
+        await this.fs.mkdirSync(destDir, { recursive: true });
       }
-      this.fs.writeFileSync(`${destDir}/_site.css`, result.css);
+      await this.fs.writeFileSync(`${destDir}/_site.css`, result.css);
       mergeConsole.debug('Wrote CSS to', `${destDir}/_site.css`);
       resolve();
     });
