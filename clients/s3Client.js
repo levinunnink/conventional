@@ -7,7 +7,9 @@ const {
   PutObjectCommand,
 } = require("@aws-sdk/client-s3");
 
-const client = new S3Client();
+const client = new S3Client({
+  region: process.env.S3_BUCKET_REGION,
+});
 
 const config = {
   s3Bucket: process.env.S3_BUCKET,
