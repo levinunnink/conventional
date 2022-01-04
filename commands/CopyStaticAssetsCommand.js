@@ -21,6 +21,7 @@ class CopyStaticAssetsCommand {
         await this.fs.mkdirSync(path.dirname(writeDir), { recursive: true });
       }
       const source = await this.fs.readFileSync(path.join(workDir, assetLoaded.path));
+      console.log('writing static asset', writeDir);
       await this.fs.writeFileSync(writeDir, source);
       mergeConsole.debug('wrote static asset', writeDir);
     });
