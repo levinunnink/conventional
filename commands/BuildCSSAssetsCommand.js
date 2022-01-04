@@ -16,6 +16,7 @@ class BuildCSSAssetsCommand {
   
   async exec(_path, outDir) {
     return new Promise(async (resolve) => {
+      mergeConsole.debug('loading css', _path);
       const css = await this.fs.readFileSync(_path, 'utf8');
       const workDir = process.env.FILESYSTEM === 's3' ? this.fs.getCacheDir() : this.root;
       let defaultTemplates = `${workDir}/**/*.{liquid,html,md,js}`;
