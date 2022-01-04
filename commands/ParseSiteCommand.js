@@ -19,7 +19,7 @@ class ParseSiteCommand {
     this.fs = _fs;
   }
 
-  async exec(workDir, destDir, config = {}) {
+  async walkDirectories(workDir, destDir, config = {}) {
     const currentDir = workDir ? path.join(this.root, workDir) : this.root;
     const outDir = destDir ? path.join(this.dest, destDir) : this.dest;
     const indexYAML = path.join(currentDir, '_index.yml');
@@ -41,7 +41,7 @@ class ParseSiteCommand {
           promises.push(this.buildIndexCommand.exec(_path, operatingOutDir, currentConfig));
         }
         promises.push(this.copyStaticAssetsCommand.exec(operatingDir, operatingOutDir, currentConfig));
-        promises.push(this.exec(operatingDir, operatingOutDir, currentConfig));
+        promises.push(...await this.walkDirectories(operatingDir, operatingOutDir, currentConfig));
       } else if(path.extname(file) === '.md') {
         promises.push(this.buildMarkdownFile.exec(_path, outDir, currentConfig));
       // } else if(path.extname(file) === '.url' || path.extname(file) === '.webloc') {
@@ -51,6 +51,11 @@ class ParseSiteCommand {
         promises.push(this.buildCSSAssetsCommand.exec(_path, outDir, currentConfig));
       }
     });
+    return promises;
+  }
+
+  async exec(workDir, destDir, config = {}) {
+    const promises = await this.walkDirectories(workDir, destDir, config);
     return Promise.all(promises);
   }
 }

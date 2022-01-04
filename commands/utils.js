@@ -28,7 +28,7 @@ module.exports.getFilesFromDir = async function(dir, fileTypes, fs) {
           size: stats.size,
         });
       } else if ((await fs.statSync(curFile)).isDirectory()) {
-        walkDir(curFile);
+        await walkDir(curFile);
       }
     }
   };
