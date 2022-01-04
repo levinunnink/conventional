@@ -5,7 +5,7 @@ class GetAssetsCommand {
   constructor(root, fs) {
     this.root = root;
     this.fs = fs;
-    this.assetExtensions = ['.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.svg'];
+    this.assetExtensions = ['.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.mp4', '.webm', '.mp3'];
   }
 
   async exec() {
