@@ -8,8 +8,10 @@ class S3PutItemCommand {
   }
 
   async exec(_path, body) {
-    console.log('writing', _path);
-    const mimeType = mime.lookup(path.extname(_path));
+    let mimeType = mime.lookup(path.extname(_path));
+    if(path.extname(_path) === '.liquid') {
+      mimeType = 'text/x-liquid';
+    }
     return this.s3Client.putObject(_path, body, mimeType);
   }
 }
