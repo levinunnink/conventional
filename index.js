@@ -5,6 +5,7 @@ const BuildIndexCommand = require('./commands/BuildIndexCommand');
 const BuildCSSAssetsCommand = require('./commands/BuildCSSAssetsCommand');
 const CopyStaticAssetsCommand = require('./commands/CopyStaticAssetsCommand');
 const CopyAssetCommand = require('./commands/CopyAssetCommand');
+const s3fs = require('./commands/s3/s3fs');
 
 module.exports = {
   ParseSiteCommand,
@@ -14,4 +15,5 @@ module.exports = {
   BuildCSSAssetsCommand,
   CopyStaticAssetsCommand,
   CopyAssetCommand,
+  s3fs,
 };
