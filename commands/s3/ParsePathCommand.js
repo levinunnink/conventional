@@ -2,7 +2,7 @@ const path = require('path');
 const YAML = require('yaml');
 const ParseS3SiteCommand = require('./ParseS3SiteCommand');
 const s3fs = require('./s3fs');
-const mergeConsole = require('../utils/console');
+const mergeConsole = require('../../utils/console');
 
 class ParsePathCommand {
   constructor(root, dest) {

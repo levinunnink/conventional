@@ -1,6 +1,7 @@
 const vm = require('vm');
 const path = require('path');
 const mergeConsole = require('../utils/console');
+const { getFilesFromDir } = require('./utils');
 
 class BuildCSSAssetsCommand {
   constructor(root, out, _fs) {
@@ -34,6 +35,16 @@ class BuildCSSAssetsCommand {
           }
           return this.fs.readFileSync(readPath, 'utf8');
         }));
+        // Need to download our template files too
+        const templateFiles = await getFilesFromDir(this.root, ['.liquid', '.html', '.md', '.js'], this.fs);
+        await Promise.all(templateFiles.map(async (file) => {
+          console.log('got file', file);
+          const readPath = path.join(this.root, file.path);
+          if((await this.fs.statSync(readPath)).isDirectory()) {
+            return Promise.resolve();
+          }
+          return this.fs.readFileSync(readPath, 'utf8');
+        }));
       }
       if(configOverrideExists && process.env.FILESYSTEM === 's3') {
         const data = await this.fs.readFileSync(`${path.dirname(_path)}/_tailwind.config.js`, 'utf8');
@@ -50,19 +61,25 @@ class BuildCSSAssetsCommand {
       const importer = this.atImport({
         path: [workDir, path.join(workDir, path.dirname(_path)), path.dirname(_path)],
       });
-      const result = await this.postcss([
+  
+      const processor = this.postcss([
         importer,
         this.tailwindcss(config),
         require('autoprefixer'),
-      ]).process(css, {
-        from: process.env.FILESYSTEM !== 's3' ? _path : undefined,
-      });
-      if(!(await this.fs.existsSync(destDir))) {
-        await this.fs.mkdirSync(destDir, { recursive: true });
-      }
-      await this.fs.writeFileSync(`${destDir}/_site.css`, result.css);
-      mergeConsole.debug('Wrote CSS to', `${destDir}/_site.css`);
-      resolve();
+      ]);
+
+      processor
+        .process(css, {
+          from: process.env.FILESYSTEM !== 's3' ? _path : undefined,
+        }).finally(async (result) => {
+          if(!(await this.fs.existsSync(destDir))) {
+            await this.fs.mkdirSync(destDir, { recursive: true });
+          }
+          mergeConsole.debug('Generated CSS', result.css);
+          await this.fs.writeFileSync(`${destDir}/_site.css`, result.css);
+          mergeConsole.debug('Wrote CSS to', `${destDir}/_site.css`);
+          resolve();
+        });
     });
   }
 }
