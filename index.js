@@ -5,6 +5,7 @@ const BuildIndexCommand = require('./commands/BuildIndexCommand');
 const BuildCSSAssetsCommand = require('./commands/BuildCSSAssetsCommand');
 const CopyStaticAssetsCommand = require('./commands/CopyStaticAssetsCommand');
 const CopyAssetCommand = require('./commands/CopyAssetCommand');
+const ParsePathCommand = require('./commands/s3/ParsePathCommand');
 const s3fs = require('./commands/s3/s3fs');
 
 module.exports = {
@@ -15,5 +16,6 @@ module.exports = {
   BuildCSSAssetsCommand,
   CopyStaticAssetsCommand,
   CopyAssetCommand,
+  ParsePathCommand,
   s3fs,
 };
