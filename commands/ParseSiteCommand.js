@@ -28,17 +28,20 @@ class ParseSiteCommand {
     const currentConfig = { ...config, ...localConfig };
     const files = await this.fs.readdirSync(currentDir);
     const promises = [];
+    console.log('files', files);
     files.forEach(async file => {
       if(file === 'node_modules') {
         return;
       }
       const _path = path.join(currentDir, file);
       const stat = await this.fs.statSync(_path);
+      console.log('path.extname(file)', path.extname(file));
       if (stat.isDirectory()) {
         const operatingDir = workDir ? path.join(workDir, file) : file;
         const operatingOutDir = destDir ? path.join(destDir, file) : file;
-        if((await this.fs.existsSync(path.join(_path, '_index.liquid')))) {
-          promises.push(this.buildIndexCommand.exec(_path, operatingOutDir, currentConfig));
+        if((await this.fs.existsSync(path.join(currentDir, '_index.liquid')))) {
+          const outIndexDir = path.dirname(operatingOutDir);
+          promises.push(this.buildIndexCommand.exec(currentDir, outIndexDir, currentConfig));
         }
         if(!onlyMarkdown) promises.push(this.copyStaticAssetsCommand.exec(operatingDir, operatingOutDir, currentConfig));
         promises.push(...await this.walkDirectories(operatingDir, operatingOutDir, currentConfig));
@@ -51,6 +54,7 @@ class ParseSiteCommand {
         if(!onlyMarkdown) promises.push(this.buildCSSAssetsCommand.exec(_path, outDir, currentConfig));
       }
     });
+    console.log('promises', promises);
     return promises;
   }
 
