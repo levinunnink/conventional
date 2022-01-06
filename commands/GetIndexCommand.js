@@ -31,14 +31,15 @@ class GetIndexCommand {
       })
       .map(async file => {
         const data = await file;
+        const root = _path == this.root ? '' : _path.replace(this.root, '');
         return {
-          url: `/${path.basename(_path)}/${path.basename(data.file, path.extname(data.file))}/`,
+          url: `${path.join(root, path.basename(data.file, path.extname(data.file)))}/`,
           excerpt: data.excerpt,
           content: parseMarkdown(data.content),
           ...data.data,
         };
       });
-    return items;
+    return Promise.all(items);
   }
 }
 
