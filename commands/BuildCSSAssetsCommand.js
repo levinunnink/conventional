@@ -2,6 +2,7 @@ const vm = require('vm');
 const path = require('path');
 const mergeConsole = require('../utils/console');
 const { getFilesFromDir } = require('./utils');
+const SafeTailwindConfigLoader = require('../utils/SafeTailwindConfigLoader');
 
 class BuildCSSAssetsCommand {
   constructor(root, out, _fs) {
@@ -49,7 +50,7 @@ class BuildCSSAssetsCommand {
         }
         if(configOverrideExists && process.env.FILESYSTEM === 's3') {
           const data = await this.fs.readFileSync(`${path.dirname(_path)}/_tailwind.config.js`, 'utf8');
-          configOverride = eval(`'use strict'; ${data}`);
+          configOverride = SafeTailwindConfigLoader.load(data);
         } else if(configOverrideExists) {
           configOverride = require(`${path.dirname(_path)}/_tailwind.config.js`);
         }
