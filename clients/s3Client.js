@@ -18,6 +18,16 @@ const config = {
 class Client {
   constructor(_client) {
     this.client = _client;
+    this.noCacheTypes = [
+      'text/html', 'text/css', 'text/javascript',
+      'application/javascript', 'application/json', 'text/plain',
+      'application/xml', 'text/csv', 'text/calendar',
+    ];
+  }
+
+  cacheControlForType(type) {
+    const maxAge = process.env.CACHE_MAX_AGE || 86400;
+    return this.noCacheTypes.includes(type) ? 'no-cache' : `max-age: ${maxAge}`;
   }
   
   async listAllObjects(key = null) {
@@ -58,6 +68,7 @@ class Client {
       Body: body,
       ACL: 'public-read',
       ContentType: mimeType,
+      CacheControl: this.cacheControlForType(mimeType),
     }
     const command = new PutObjectCommand(input);
     return client.send(command);
