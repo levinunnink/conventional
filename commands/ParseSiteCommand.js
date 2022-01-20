@@ -45,6 +45,10 @@ class ParseSiteCommand {
         }
         if(!onlyMarkdown) promises.push(this.copyStaticAssetsCommand.exec(operatingDir, operatingOutDir, currentConfig));
         promises.push(...await this.walkDirectories(operatingDir, operatingOutDir, currentConfig));
+      } else if(file === '_index.liquid') {
+        const operatingOutDir = destDir ? path.join(destDir, file) : file;
+        const outIndexDir = path.dirname(operatingOutDir);
+        promises.push(this.buildIndexCommand.exec(currentDir, outIndexDir, currentConfig));
       } else if(path.extname(file) === '.md') {
         promises.push(this.buildMarkdownFile.exec(_path, outDir, currentConfig));
       // } else if(path.extname(file) === '.url' || path.extname(file) === '.webloc') {
