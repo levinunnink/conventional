@@ -39,10 +39,10 @@ class ParseSiteCommand {
       if (stat.isDirectory()) {
         const operatingDir = workDir ? path.join(workDir, file) : file;
         const operatingOutDir = destDir ? path.join(destDir, file) : file;
-        if((await this.fs.existsSync(path.join(currentDir, '_index.liquid')))) {
-          const outIndexDir = path.dirname(operatingOutDir);
-          promises.push(this.buildIndexCommand.exec(currentDir, outIndexDir, currentConfig));
-        }
+        // if((await this.fs.existsSync(path.join(currentDir, '_index.liquid')))) {
+        //   const outIndexDir = path.dirname(operatingOutDir);
+        //   promises.push(this.buildIndexCommand.exec(currentDir, outIndexDir, currentConfig));
+        // }
         if(!onlyMarkdown) promises.push(this.copyStaticAssetsCommand.exec(operatingDir, operatingOutDir, currentConfig));
         promises.push(...await this.walkDirectories(operatingDir, operatingOutDir, currentConfig));
       } else if(file === '_index.liquid') {
